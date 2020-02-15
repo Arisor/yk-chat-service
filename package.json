@@ -1,0 +1,29 @@
+{
+  "name": "yk-chat-service",
+  "version": "1.0.0",
+  "description": "聊天服务",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arisor/yk-chat-service.git"
+  },
+  "author": "Arisor",
+  "license": "MIT ",
+  "bugs": {
+    "url": "https://github.com/Arisor/yk-chat-service/issues"
+  },
+  "homepage": "https://github.com/Arisor/yk-chat-service#readme",
+  "dependencies": {
+    "@koa/cors": "^3.0.0",
+    "async": "^3.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.11.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^8.0.7",
+    "md5": "^2.2.1",
+    "mysql": "^2.18.1"
+  }
+}
