@@ -30,7 +30,7 @@ CREATE TABLE `group_info` (
   `group_notice` varchar(100) NOT NULL DEFAULT '欢迎大家入群交流~' COMMENT '群公告',
   `group_avator` varchar(100) NOT NULL DEFAULT 'https://avatars2.githubusercontent.com/u/24861316?s=460&v=4' COMMENT '群头像',
   `group_creater` varchar(10) NOT NULL DEFAULT '' COMMENT '群创建人',
-  `creater_time` int(11) NOT NULL COMMENT '群创建时间',
+  `creater_time` BIGINT NOT NULL COMMENT '群创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -55,7 +55,7 @@ CREATE TABLE `group_msg` (
   `from_user` int(11) NOT NULL COMMENT '谁发的',
   `to_group` char(100) NOT NULL DEFAULT '' COMMENT '群id',
   `message` text NOT NULL COMMENT '聊天信息',
-  `time` int(11) NOT NULL COMMENT '发送时间',
+  `time` BIGINT NOT NULL COMMENT '发送时间',
   PRIMARY KEY (`id`),
   KEY `to_group` (`to_group`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -107,7 +107,7 @@ CREATE TABLE `new_friends` (
   `to_user` int(11) NOT NULL COMMENT '被加方',
   `content` varchar(50) NOT NULL DEFAULT '' COMMENT '加好友验证内容',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1同意，0未同意',
-  `time` int(11) NOT NULL,
+  `time` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -138,7 +138,8 @@ CREATE TABLE `private__msg` (
   `from_user` int(11) NOT NULL COMMENT '谁发的',
   `to_user` int(11) NOT NULL COMMENT '发给谁',
   `message` text NOT NULL COMMENT '聊天信息',
-  `time` int(11) NOT NULL COMMENT '发送时间',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否已读,0未读,1已读',
+  `time` BIGINT NOT NULL COMMENT '发送时间',
   PRIMARY KEY (`id`),
   KEY `from_user` (`from_user`),
   KEY `to_user` (`to_user`)
@@ -149,12 +150,16 @@ LOCK TABLES `private__msg` WRITE;
 
 INSERT INTO `private__msg` (`id`, `from_user`, `to_user`, `message`, `time`)
 VALUES
-	(1,1,14,'你好罗宾',1581779615121),
+	(1,1,14,'你好罗宾',1581822551215),
 	(2,14,1,'你好呀路飞',1581779615121),
 	(3,14,1,'我建个群去 ，你待会加哈    叫 交流群',1581779615121),
 	(6,1,14,'咋把我删了呢，重新加一下',1581779615121),
 	(7,14,1,'额 误删.',1581779615121),
-	(8,14,1,'在么',1581779615121);
+	(8,14,1,'在么1',1581779615121),
+	(9,14,1,'在么2',1581779615121),
+	(10,14,1,'在么3',1581779615121),
+	(11,14,1,'在么4',1581779615121),
+	(12,14,1,'在么5',1581779615121);
 
 /*!40000 ALTER TABLE `private__msg` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -185,11 +190,12 @@ LOCK TABLES `user_info` WRITE;
 
 INSERT INTO `user_info` (`id`, `name`, `password`, `sex`, `avator`, `place`, `status`, `socketid`, `website`, `github`, `intro`)
 VALUES
-	(1,'117171','e10adc3949ba59abbe56e057f20f883e',0,'https://raw.githubusercontent.com/Arisor/yk-chat-webapp/master/src/assets/avatar.png','厦门',0,'tIckUQsrpFm_Wki0AAAF','','https://github.com/Hxvin',NULL),
-	(2,'117172','e10adc3949ba59abbe56e057f20f883e',1,'https://raw.githubusercontent.com/Arisor/yk-chat-webapp/master/src/assets/avatar.png','深圳',0,'l12EoQ8PbnmvupNQAAAP',NULL,'',NULL),
-	(3,'117173','e10adc3949ba59abbe56e057f20f883e',1,'https://raw.githubusercontent.com/Arisor/yk-chat-webapp/master/src/assets/avatar.png','杭州',0,'ue0dCyN0zAyJurW-AABQ',NULL,NULL,NULL),
-	(4,'117174','e10adc3949ba59abbe56e057f20f883e',1,'https://raw.githubusercontent.com/Arisor/yk-chat-webapp/master/src/assets/avatar.png','',0,'67kamGg8ibMLEjpZAAAD',NULL,NULL,NULL),
-	(14,'117175','e10adc3949ba59abbe56e057f20f883e',1,'https://raw.githubusercontent.com/Arisor/yk-chat-webapp/master/src/assets/avatar.png',NULL,0,'9sictmm25dBk8tj2AAAC',NULL,NULL,NULL);
+	(1,'117171','e10adc3949ba59abbe56e057f20f883e',0,'','厦门',0,'tIckUQsrpFm_Wki0AAAF','','https://github.com/Hxvin',NULL),
+	(2,'117172','e10adc3949ba59abbe56e057f20f883e',1,'','深圳',0,'l12EoQ8PbnmvupNQAAAP',NULL,'',NULL),
+	(3,'117173','e10adc3949ba59abbe56e057f20f883e',1,'','杭州',0,'ue0dCyN0zAyJurW-AABQ',NULL,NULL,NULL),
+	(4,'117174','e10adc3949ba59abbe56e057f20f883e',1,'','',0,'67kamGg8ibMLEjpZAAAD',NULL,NULL,NULL),
+	(14,'117175','e10adc3949ba59abbe56e057f20f883e',1,'',NULL,0,'9sictmm25dBk8tj2AAAC',NULL,NULL,NULL),
+	(15,'宝宝的小宝贝','8aef9f336da202514a53c59e92d30838',1,'',NULL,0,'9sictmm25dBk8tj2AAAC',NULL,NULL,NULL);
 
 /*!40000 ALTER TABLE `user_info` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -206,7 +212,7 @@ CREATE TABLE `user_user_relation` (
   `other_user_id` int(11) NOT NULL COMMENT '用户的朋友',
   `remark` varchar(10) DEFAULT '' COMMENT '备注',
   `shield` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0不屏蔽 1屏蔽',
-  `time` int(11) NOT NULL,
+  `time` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

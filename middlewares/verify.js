@@ -13,9 +13,9 @@ module.exports = async function (ctx, next) {
 		const payload = jwt.verify(token, secret)
 		ctx.user_id = payload.id;
 		ctx.name = payload.name;
-		await next()
 	} catch (err) {
 		ctx.status = 401
 		return
 	}
+	await next()
 }

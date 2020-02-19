@@ -3,31 +3,31 @@ const {
 } = require('../utils/db');
 
 // 注册用户
-let insertData = function(value) {
+let insertData = function (value) {
 	let _sql = "insert into user_info(name,password) values(?,?);"
 	return query(_sql, value)
 }
 
 // 通过用户名查找用户信息 user_info
-let findDataByName = function(name) {
+let findDataByName = function (name) {
 	let _sql = 'SELECT * FROM user_info WHERE name= ? '
 	return query(_sql, name)
 }
 
 // 通过用户名查找用户信息 user_info 不包括密码
-let findUIByName = function(name) {
-	let _sql = 'SELECT id ,name ,sex,avator,place,github FROM user_info WHERE name = ? '
-	return query(_sql, name)
+let findUIByName = function (name) {
+	let _sql = 'SELECT id ,name ,sex,avator,place,github FROM user_info WHERE name like ? '
+	return query(_sql, `%${name}%`)
 }
 
 //修改我的信息
-let editorInfo = function(data) {
+let editorInfo = function (data) {
 	let _sql = ' UPDATE  user_info SET github = ?,website = ?,sex = ?,place = ? WHERE id = ? ; '
 	return query(_sql, data)
 }
 
 // 通过用户id查找用户信息 user_info 包括密码
-let findDataByUserid = function(userid) {
+let findDataByUserid = function (userid) {
 	let _sql = 'SELECT * FROM user_info WHERE id= ? '
 	return query(_sql, [userid])
 }
@@ -81,6 +81,13 @@ let editorRemark = (remark, user_id, other_user_id) => {
 	return query(_sql, [remark, user_id, other_user_id]);
 }
 
+//获取用户的所有好友
+let getMyFriends = (user_id) => {
+	const _sql =
+		'select uur.other_user_id as id,ui.name as name from user_user_relation uur inner join user_info ui on uur.other_user_id = ui.id where uur.user_id = ?'
+	return query(_sql, [user_id]);
+}
+
 
 module.exports = {
 	insertData,
@@ -92,5 +99,6 @@ module.exports = {
 	delFriend,
 	shieldFriend,
 	editorRemark,
-	editorInfo
+	editorInfo,
+	getMyFriends
 }
